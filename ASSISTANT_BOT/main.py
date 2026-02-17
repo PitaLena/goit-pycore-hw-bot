@@ -14,36 +14,20 @@ def main() -> None:
             print("Good bye!")
             break
 
-        if command == "":
-            print("Invalid command.")
-            continue
-
-        if command == "hello":
+        elif command == "hello":
             print("How can I help you?")
 
         elif command == "add":
-            if len(args) != 2:
-                print("Invalid command.")
-            else:
-                print(add_contact(args, contacts))
+            print(add_contact(args, contacts))
 
         elif command == "change":
-            if len(args) != 2:
-                print("Invalid command.")
-            else:
-                print(change_contact(args, contacts))
+            print(change_contact(args, contacts))
 
         elif command == "phone":
-            if len(args) != 1:
-                print("Invalid command.")
-            else:
-                print(show_phone(args, contacts))
+            print(show_phone(args, contacts))
 
         elif command == "all":
-            if args:
-                print("Invalid command.")
-            else:
-                print(show_all(contacts))
+            print(show_all(contacts))
 
         else:
             print("Invalid command.")
