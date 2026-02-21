@@ -1,39 +1,33 @@
-def add_contact(args: list[str], contacts: dict[str, str]) -> str:
-    if len(args) != 2:
-        return "Invalid command."
+from src.decorators import input_error
 
+
+@input_error
+def add_contact(args: list[str], contacts: dict[str, str]) -> str:
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
 
+@input_error
 def change_contact(args: list[str], contacts: dict[str, str]) -> str:
-    if len(args) != 2:
-        return "Invalid command."
-
     name, phone = args
-
     if name not in contacts:
-        return "Contact not found."
-
+        raise KeyError
     contacts[name] = phone
     return "Contact updated."
 
 
+@input_error
 def show_phone(args: list[str], contacts: dict[str, str]) -> str:
-    if len(args) != 1:
-        return "Invalid command."
-
     name = args[0]
-
     if name not in contacts:
-        return "Contact not found."
-
+        raise KeyError
     return contacts[name]
 
 
+@input_error
 def show_all(contacts: dict[str, str]) -> str:
     if not contacts:
-        return "No contacts saved."
+        return ""
 
     return "\n".join(f"{name}: {phone}" for name, phone in contacts.items())
