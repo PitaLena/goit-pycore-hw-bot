@@ -1,11 +1,11 @@
+from src.address_book import AddressBook
 from src.parser import parse_input
-from src.handlers import add_contact, change_contact, show_phone, show_all
-
+from src.handlers import add_contact, change_contact, show_phone, show_all, add_birthday, show_birthday, birthdays
 
 def main() -> None:
-    contacts: dict[str, str] = {}
-
+    book = AddressBook()
     print("Welcome to the assistant bot!")
+
     while True:
         user_input = input("Enter a command: ")
         command, args = parse_input(user_input)
@@ -18,16 +18,25 @@ def main() -> None:
             print("How can I help you?")
 
         elif command == "add":
-            print(add_contact(args, contacts))
+            print(add_contact(args, book))
 
         elif command == "change":
-            print(change_contact(args, contacts))
+            print(change_contact(args, book))
 
         elif command == "phone":
-            print(show_phone(args, contacts))
+            print(show_phone(args, book))
 
         elif command == "all":
-            print(show_all(contacts))
+            print(show_all(args, book))
+
+        elif command == "add-birthday":
+            print(add_birthday(args, book))
+
+        elif command == "show-birthday":
+            print(show_birthday(args, book))
+
+        elif command == "birthdays":
+            print(birthdays(args, book))    
 
         else:
             print("Invalid command.")

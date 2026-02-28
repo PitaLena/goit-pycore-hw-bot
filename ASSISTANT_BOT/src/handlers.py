@@ -1,33 +1,82 @@
 from src.decorators import input_error
+from src.address_book import Record
 
 
 @input_error
-def add_contact(args: list[str], contacts: dict[str, str]) -> str:
-    name, phone = args
-    contacts[name] = phone
-    return "Contact added."
+def add_contact(args, book):
+    name, phone, *_ = args
+    record = book.find(name)
 
+    if record is None:
+        record = Record(name)
+        book.add_record(record)
+        record.add_phone(phone)
+        return "Contact added."
 
-@input_error
-def change_contact(args: list[str], contacts: dict[str, str]) -> str:
-    name, phone = args
-    if name not in contacts:
-        raise KeyError
-    contacts[name] = phone
+    record.add_phone(phone)
     return "Contact updated."
 
 
 @input_error
-def show_phone(args: list[str], contacts: dict[str, str]) -> str:
-    name = args[0]
-    if name not in contacts:
-        raise KeyError
-    return contacts[name]
+def change_contact(args, book):
+    name, old_phone, new_phone = args
+    record = book.find(name)
+    if not record:
+        raise ValueError("Contact not found")
+
+    record.edit_phone(old_phone, new_phone)
+    return "Phone updated."
 
 
 @input_error
-def show_all(contacts: dict[str, str]) -> str:
-    if not contacts:
-        return ""
+def show_phone(args, book):
+    name = args[0]
+    record = book.find(name)
+    if not record:
+        raise ValueError("Contact not found")
 
-    return "\n".join(f"{name}: {phone}" for name, phone in contacts.items())
+    phones = "; ".join(p.value for p in record.phones)
+    return phones
+
+
+@input_error
+def show_all(args, book):
+    if not book.data:
+        return "Address book is empty."
+    return "\n".join(str(record) for record in book.data.values())
+
+
+@input_error
+def add_birthday(args, book):
+    name, birthday = args
+    record = book.find(name)
+    if not record:
+        raise ValueError("Contact not found")
+
+    record.add_birthday(birthday)
+    return "Birthday added."
+
+@input_error
+def show_birthday(args, book):
+    name = args[0]
+    record = book.find(name)
+    if not record:
+        raise ValueError("Contact not found")
+
+    if not record.birthday:
+        return "Birthday not set."
+
+    return str(record.birthday)
+
+@input_error
+def birthdays(args, book):
+    upcoming = book.get_upcoming_birthdays()
+
+    if not upcoming:
+        return "No upcoming birthdays."
+
+    result = []
+    for item in upcoming:
+        result.append(f"{item['name']} - {item['congratulation_date']}")
+
+    return "\n".join(result)
