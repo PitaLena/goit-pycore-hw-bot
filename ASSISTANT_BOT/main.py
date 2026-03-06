@@ -1,9 +1,11 @@
 from src.address_book import AddressBook
 from src.parser import parse_input
 from src.handlers import add_contact, change_contact, show_phone, show_all, add_birthday, show_birthday, birthdays
+from src.storage import load_data, save_data
+
 
 def main() -> None:
-    book = AddressBook()
+    book = load_data()
     print("Welcome to the assistant bot!")
 
     while True:
@@ -11,6 +13,7 @@ def main() -> None:
         command, args = parse_input(user_input)
 
         if command in ["close", "exit"]:
+            save_data(book)
             print("Good bye!")
             break
 
